@@ -15,8 +15,8 @@ function App() {
       <h1>Protein Pow</h1>
       <div className="filter price">
         <div className = "content">
-          <Dropdown
-          buttonText="Dropdown button" content = {<p>Hello World!</p>} />
+          
+
         </div>
       </div>
       <div className="card">

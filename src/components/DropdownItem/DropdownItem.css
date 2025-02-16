@@ -1,0 +1,28 @@
+/* DropdownItem.css */
+
+/* Basic styling for each dropdown item */
+.dropdown-item {
+    padding: 10px 20px;   /* Adds padding around the item */
+    cursor: pointer;      /* Change the cursor to a pointer when hovering */
+    background-color: #f9f9f9; /* Light background color */
+    border: 1px solid #ddd; /* Light border around each item */
+    border-radius: 4px;   /* Rounded corners */
+    transition: background-color 0.3s ease;  /* Smooth transition for background color */
+  }
+  
+  /* Add hover effect for better user experience */
+  .dropdown-item:hover {
+    background-color: #e2e2e2;  /* Change background color on hover */
+  }
+  
+  /* Optional: Add active state styling (when the item is clicked) */
+  .dropdown-item:active {
+    background-color: #ccc;  /* Darker background when the item is clicked */
+  }
+  
+  /* Optional: Add focus styling if you're handling keyboard navigation */
+  .dropdown-item:focus {
+    outline: none; /* Remove the default outline */
+    box-shadow: 0 0 0 2px #3b82f6; /* Blue outline on focus (accessible focus style) */
+  }
+  
