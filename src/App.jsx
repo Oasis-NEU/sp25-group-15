@@ -18,23 +18,22 @@ function App() {
   return (
     <>
       <h1>Protein Pow</h1>
-      <div className="filter price">
+      {/* <div className="filter price">
         <div className = "content">
-          <Dropdown
-          buttonText="Dropdown button" content = {<p>Hello World!</p>} />
+          buttonText="Dropdown button" content = {<p>Hello World!</p>} 
+        </div>
+      </div> */}
+
+      <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+        <div id="myDropdown" class="dropdown-content">
+          <a href="#">Link 1</a>
+          <a href="#">Link 2</a>
+          <a href="#">Link 3</a>
         </div>
       </div>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+    
     </>
   )
 
