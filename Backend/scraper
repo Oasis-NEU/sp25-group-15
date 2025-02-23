@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+
+import requests
+import time
+from bs4 import BeautifulSoup
+
+# ScraperAPI Key
+API_KEY = "678f73f95844b84e36e822c4cd3a09d9"
+
+# Base Amazon search URL
+BASE_URL = "https://www.amazon.com/s?k=protein+powder"
+
+# Maximum number of pages to scrape
+MAX_PAGES = 3  
+
+def scrape_amazon():
+    for page in range(1, MAX_PAGES + 1):
+        print(f"\nScraping Page {page}\n")
+        
+        # Modify URL to go to the next page
+        amazon_url = f"{BASE_URL}&page={page}"
+        
+        # Use ScraperAPI to bypass bot detection
+        url = f"https://api.scraperapi.com/?api_key={API_KEY}&url={amazon_url}"
+        
+        # Send request through ScraperAPI
+        response = requests.get(url)
+        
+        if response.status_code != 200:
+            print(f"Failed to retrieve page {page}. Status code: {response.status_code}")
+            continue
+        
+        # Parse HTML with BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Extract product names
+        product_names = [item.text.strip() for item in soup.select("h2.a-size-base-plus span")]
+
+        # Extract prices
+        product_prices = [item.text.strip() for item in soup.select("span.a-price-whole")]
+
+        # Extract ratings
+        product_ratings = [item.text.strip() if item else "No rating" for item in soup.select("span.a-icon-alt")]
+
+        # Extract flavors
+        product_flavors = [item.text.strip() if item else "No flavor" for item in soup.select("span#inline-twister-expanded-dimension-text-flavor_name")]
+
+        # Print results
+        if product_names:
+            for i, (name, price, rating, flavor) in enumerate(zip(product_names, product_prices, product_ratings, product_flavors), 1):
+                print(f"{i}. {name} | Price: ${price} | Rating: {rating} | Flavor: {flavor}")
+        else:
+            print("No product names found!")
+
+        # Optional: Add a short delay to avoid too many requests at once
+        time.sleep(5)
+
+def main():
+    scrape_amazon()
+
+if __name__ == "__main__":
+    main()
