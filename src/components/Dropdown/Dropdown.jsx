@@ -1,7 +1,28 @@
-import React from "react";
+/*import React, { useState } from 'react'
+import './Dropdown.css'
 
-const Dropdown = () => {
-    return <div>Dropdown</div>;
-};
+function Dropdown({ buttonText, content }) {
+  const [isOpen, setIsOpen] = useState(false)
 
-export default Dropdown;
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen)
+  }
+
+  return (
+    <div className="dropdown">
+      {/* The button toggles isOpen state }
+      <button className="dropdown-button" onClick={toggleDropdown}>
+        {buttonText}
+      </button>
+
+      {/* Only show the dropdown content if isOpen is true }
+      {isOpen && (
+        <div className="dropdown-content">
+          {content}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default Dropdown*/
