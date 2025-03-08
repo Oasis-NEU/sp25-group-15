@@ -1,202 +1,65 @@
-/* === Global (Body & Font) === */
+/* src/App.css */
+
+/* Global reset for better consistency */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base styles for the App container */
+.App {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #fff;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body styles */
 body {
-  /* Updated gradient background */
-  background: linear-gradient(90deg, #0F4C75, #D72638) !important; 
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto', sans-serif; /* or any font you prefer */
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #fff;
+  color: #333;
 }
 
-/* === Headings === */
-h1 {
-  margin-top: -350px; /* Negative value will move it up */
-  margin-left: -30px; /* Negative value will move it up */
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-/* === Buttons === */
-button {
-  margin-right: 50px;
+/* Paragraphs */
+p {
+  margin-bottom: 1rem;
 }
 
-/* === Root Container === */
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-/* === Logo (if used) === */
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-/* === Logo Spin Animation (if used) === */
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-/* === Card Section === */
-.card {
-  padding: 2em;
-}
-
-/* === Docs Text === */
-.read-the-docs {
-  color: #888;
-}
-
-/* === Dropdown Styles === */
-.dropbtn {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-.dropbtn2 {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-/* Dropdown button on hover & focus */
-.dropbtn:hover, .dropbtn:focus,
-.dropbtn2:hover, .dropbtn2:focus {
-  background-color: #2980B9;
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-.dropdown2 {
-  position: relative;
-  display: inline-block;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-.dropdown-content2 {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
+/* Anchor tags */
+a {
+  color: #0077cc;
   text-decoration: none;
-  display: block;
 }
-.dropdown-content2 a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
+a:hover {
+  text-decoration: underline;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
   display: block;
 }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
-.dropdown-content2 a:hover {
-  background-color: #ddd;
-}
-
-/* Show the dropdown menu (JS toggles this class) */
-.show {
-  display: block;
-}
-.show2 {
-  display: block;
-}
-
-/* === Side Tabs (for Our Mission, Importance of Protein, etc.) === */
-.side-tabs-container {
+/* Utility classes */
+.container {
   width: 100%;
-  display: flex; /* so sidebar nav & content are side by side */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
-/* Left nav area for tabs */
-.side-tabs-nav {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 220px; /* sidebar width */
-  border-right: 1px solid #ccc;
-  background-color: #090000; /* light background */
-}
-
-.side-tabs-nav li {
-  padding: 15px 20px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
-  color: #333;
-}
-
-.side-tabs-nav li:hover {
-  background-color: #e6e6e6;
-}
-
-.side-tabs-nav li.active {
-  background-color: #ddd;
-  font-weight: bold;
-}
-
-/* Right content area for selected tab's info */
-.side-tabs-content {
-  flex: 1;
-  padding: 20px;
-  background-color: #fff; /* white background for content */
-  color: #333;
-}
-
-/* === Layout Styles === */
-.layout {
-  display: flex;
-}
-
-.sidebar {
-  width: 220px;
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
+.text-center {
+  text-align: center;
 }

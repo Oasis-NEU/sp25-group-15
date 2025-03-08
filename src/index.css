@@ -2,15 +2,22 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  /* color-scheme: light dark; */
-  color: rgba(255, 255, 255, 0.87);
-  /* background-color: #242424; */
-
+  color: #333; /* changed from rgba(255,255,255,0.87) to #333 for normal text */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  /* Remove or comment out the gradient and flex so the new layout can appear */
+  /* min-height: 100vh; */
+  /* display: flex; */
+  /* place-items: center; */
+  /* background: linear-gradient(90deg, red, black, blue) !important; */
+  background-color: #fff; /* A simple white background */
 }
 
 a {
@@ -21,16 +28,6 @@ a {
 a:hover {
   color: #535bf2;
 }
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  display: flex;
-  place-items: center;
-  background: linear-gradient(90deg, red, black, blue) !important;
-}
-
 
 h1 {
   font-size: 3.2em;
@@ -58,13 +55,12 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #b41010;
-    /* background-color: #ffffff; */
+    color: #333; /* or #b41010 if you want a different color in light mode */
   }
   a:hover {
     color: #04062a;
   }
   button {
-    background-color: #120101;
+    background-color: #e0e0e0; /* a lighter button color for light mode */
   }
 }

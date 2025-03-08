@@ -1,0 +1,25 @@
+.mission-section {
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto; /* center it */
+  }
+  
+  .mission-image img {
+    max-width: 300px; 
+    border-radius: 8px;
+  }
+  
+  .mission-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mission-content p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  
