@@ -129,8 +129,8 @@ const styles = {
     color: '#3498db',
   },
   faqSection: {
-    marginTop: '50px',
-    padding: '30px',
+    marginTop: '20px',
+    padding: '15px',
     backgroundColor: 'white',
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
@@ -141,19 +141,40 @@ const styles = {
     color: '#3498db',
     textAlign: 'center',
   },
-  faqItem: {
-    marginBottom: '25px',
-    paddingBottom: '25px',
-    borderBottom: '1px solid #eee',
-  },
+  // faqItem: {
+  //   marginBottom: '25px',
+  //   paddingBottom: '25px',
+  //   borderBottom: '1px solid #eee',
+  // },
   faqQuestion: {
     fontSize: '1.1rem',
     marginBottom: '10px',
     color: '#e74c3c',
   },
   faqAnswer: {
-    fontSize: '0.9rem',
+    fontSize: '1.4 rem',
     color: '#555',
+  },
+  productCard: {
+    border: "1px solid #ddd",
+    padding: "15px",
+    borderRadius: "8px",
+    boxShadow: "2px 2px 5px rgba(0,0,0,0.1)",
+    textAlign: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    maxWidth: "800px",
+    margin: "10px auto", 
+    overflow: "hidden",
+  },
+  productImage: {
+    width: "100%",
+    height: "auto",
+    maxHeight: "150px",
+    objectFit: "contain",
+    borderRadius: "5px",
+    marginBottom: "10px",
   },
 };
 
@@ -164,7 +185,7 @@ const products = [
     calories: 120,
     protein: 25,
     weight: 500,
-    image: 'https://via.placeholder.com/200x150?text=Whey+Protein',
+    image: 'https://m.media-amazon.com/images/I/81RRwEMq5jL.__AC_SX300_SY300_QL70_FMwebp_.jpg',
   },
   {
     name: 'Plant-Based Protein',
@@ -172,7 +193,7 @@ const products = [
     calories: 140,
     protein: 21,
     weight: 500,
-    image: 'https://via.placeholder.com/200x150?text=Plant+Protein',
+    image: 'https://m.media-amazon.com/images/I/71lu0LrUI+L._AC_SY300_SX300_.jpg',
   },
   {
     name: 'Casein Protein',
@@ -180,7 +201,7 @@ const products = [
     calories: 130,
     protein: 24,
     weight: 500,
-    image: 'https://via.placeholder.com/200x150?text=Casein+Protein',
+    image: 'https://m.media-amazon.com/images/I/71xhaB1CRkL._AC_SY879_.jpg',
   },
 ];
 
@@ -243,9 +264,11 @@ function App() {
         {sortedProducts.map((product, index) => (
           <div style={styles.productCard} key={index}>
             <h3>{product.name}</h3>
+            <img src={product.image} alt={product.name} style={styles.productImage} />
             <p>Price: ${product.price.toFixed(2)}</p>
             <p>Price per Gram: ${product.pricePerGram.toFixed(4)}</p>
             <p>Protein Efficiency: {product.efficiency.toFixed(4)}</p>
+            
           </div>
         ))}
       </main>
