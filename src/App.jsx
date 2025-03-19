@@ -36,11 +36,13 @@ const styles = {
   },
   sortContainer: {
     display: 'flex',
-    justifyContent: 'center',
-    gap: '20px',
+    justifyContent: 'flex-start',  
+    gap: '40px',
+    paddingLeft: '270px',         
     marginBottom: '30px',
     flexWrap: 'wrap',
   },
+  
   sortGroup: {
     flex: '1',
     minWidth: '250px',
@@ -50,7 +52,7 @@ const styles = {
     display: 'block',
     marginBottom: '8px',
     fontWeight: '500',
-    color: '#555',
+    color: '#e74c3c',
   },
   select: {
     width: 'auto',     
@@ -141,11 +143,6 @@ const styles = {
     color: '#3498db',
     textAlign: 'center',
   },
-  // faqItem: {
-  //   marginBottom: '25px',
-  //   paddingBottom: '25px',
-  //   borderBottom: '1px solid #eee',
-  // },
   faqQuestion: {
     fontSize: '1.1rem',
     marginBottom: '10px',
@@ -206,29 +203,32 @@ const products = [
 ];
 
 function App() {
-  const [efficiencySort, setEfficiencySort] = useState('high-to-low');
-  const [priceSort, setPriceSort] = useState('low-to-high');
+  const [efficiencySort, setEfficiencySort] = useState(""); // Initial state is empty
+  const [priceSort, setPriceSort] = useState(""); // Initial state is empty
+  
 
   const sortedProducts = [...products]
-    .map((p) => ({
-      ...p,
-      efficiency: p.protein / p.calories,
-      pricePerGram: p.price / (p.weight / 1000), // Convert weight to kilograms (if weight is available)
-    }))
-    .sort((a, b) => {
-      const priceComparison =
-        priceSort === 'low-to-high'
-          ? a.pricePerGram - b.pricePerGram
-          : b.pricePerGram - a.pricePerGram;
-
-      if (priceComparison !== 0) {
-        return priceComparison;
-      }
-
-      return efficiencySort === 'high-to-low'
+  .map((p) => ({
+    ...p,
+    efficiency: p.protein / p.calories,
+    pricePerGram: p.price / (p.weight / 1000),
+  }))
+  .sort((a, b) => {
+    // which sorting method was changed last
+    if (efficiencySort === "high-to-low" || efficiencySort === "low-to-high") {
+      return efficiencySort === "high-to-low"
         ? b.efficiency - a.efficiency
         : a.efficiency - b.efficiency;
-    });
+    }
+
+    if (priceSort === "low-to-high" || priceSort === "high-to-low") {
+      return priceSort === "low-to-high"
+        ? a.pricePerGram - b.pricePerGram
+        : b.pricePerGram - a.pricePerGram;
+    }
+
+    return 0; //this means no sorting was done
+  });
 
   return (
     <div style={styles.container}>
@@ -242,24 +242,41 @@ function App() {
           Compare protein products side by side to discover the best value for your fitness and budget goals.
         </p>
 
-        <div style={styles.sortContainer}>
-          <select
-            value={efficiencySort}
-            onChange={(e) => setEfficiencySort(e.target.value)}
-            style={styles.select}
-          >
-            <option value="high-to-low">Efficiency: High to Low</option>
-            <option value="low-to-high">Efficiency: Low to High</option>
-          </select>
-          <select
-            value={priceSort}
-            onChange={(e) => setPriceSort(e.target.value)}
-            style={styles.select}
-          >
-            <option value="low-to-high">Price per Gram: Low to High</option>
-            <option value="high-to-low">Price per Gram: High to Low</option>
-          </select>
-        </div>
+      <div style={styles.sortContainer}>
+
+
+        <div style={styles.sortGroup}>
+        <h3 style={styles.label}>Sort by Efficiency</h3>
+        <select
+          value={efficiencySort}
+          onChange={(e) => {
+            setEfficiencySort(e.target.value);
+            setPriceSort(""); // Reset sorting when efficiency is changed
+          }}
+          style={styles.select}
+        >
+          <option value="">Select</option>
+          <option value="high-to-low">High to Low</option>
+          <option value="low-to-high">Low to High</option>
+        </select>
+      </div>
+
+      <div style={styles.sortGroup}>
+        <h3 style={styles.label}>Sort by Price</h3>
+        <select
+          value={priceSort}
+          onChange={(e) => {
+            setPriceSort(e.target.value);
+            setEfficiencySort(""); // Reset sorting when price is changed
+          }}
+          style={styles.select}
+        >
+          <option value="">Select</option>
+          <option value="low-to-high">Low to High</option>
+          <option value="high-to-low">High to Low</option>
+        </select>
+      </div>
+    </div>
 
         {sortedProducts.map((product, index) => (
           <div style={styles.productCard} key={index}>
