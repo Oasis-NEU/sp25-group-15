@@ -10,3 +10,33 @@
 # Send info to frontend
 # price per serving, links, images, reviews ouit of 5 or anything else  
 
+
+import json
+import os
+from dotenv import load_dotenv
+from supabase import create_client
+
+load_dotenv()
+
+# Initialize Supabase client
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
+supabase = create_client(url, key)
+
+# Get data from the table
+response = supabase.table("Protein-Powder-Info").select("*").execute()
+
+#print(response)
+
+data = response.data
+protein_per_serving = {}
+
+for row in data:
+    protein_per_serving[row["name"]] = row["properserv"]  # Use the actual column name
+
+# Sort by highest protein per serving
+sorted_protein = sorted(protein_per_serving.items(), key=lambda item: item[1], reverse=True)
+# Print results
+
+for name, protein in sorted_protein:
+    print(f"{name}: {protein:.2f}g per serving")
