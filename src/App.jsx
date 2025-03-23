@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Style objects for inline styling
 const styles = {
   container: {
@@ -94,21 +94,6 @@ const styles = {
     flex: '2',
     minWidth: '300px',
   },
-  // productCard: {
-  //   backgroundColor: 'white',
-  //   borderRadius: '8px',
-  //   padding: '20px',
-  //   marginBottom: '20px',
-  //   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  //   borderTop: '4px solid #e74c3c',
-  //   transition: 'transform 0.3s, box-shadow 0.3s',
-  // },
-  // productImage: {
-  //   width: '100%',
-  //   height: 'auto',
-  //   borderRadius: '4px',
-  //   marginBottom: '15px',
-  // },
   productName: {
     fontSize: '1.2rem',
     marginBottom: '10px',
@@ -173,61 +158,108 @@ const styles = {
     borderRadius: "5px",
     marginBottom: "10px",
   },
+  loadingText: {
+    textAlign: 'center',
+    fontSize: '1.2rem',
+    color: '#3498db',
+    margin: '30px 0',
+  },
+  errorText: {
+    textAlign: 'center',
+    fontSize: '1.2rem',
+    color: '#e74c3c',
+    margin: '30px 0',
+  },
+  buyButton: {
+    backgroundColor: '#3498db',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    padding: '8px 16px',
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+    marginTop: '10px',
+    transition: 'background-color 0.3s',
+  },
 };
 
-const products = [
-  {
-    name: 'Whey Protein Isolate',
-    price: 29.99,
-    calories: 120,
-    protein: 25,
-    weight: 500,
-    image: 'https://m.media-amazon.com/images/I/81RRwEMq5jL.__AC_SX300_SY300_QL70_FMwebp_.jpg',
-  },
-  {
-    name: 'Plant-Based Protein',
-    price: 34.99,
-    calories: 140,
-    protein: 21,
-    weight: 500,
-    image: 'https://m.media-amazon.com/images/I/71lu0LrUI+L._AC_SY300_SX300_.jpg',
-  },
-  {
-    name: 'Casein Protein',
-    price: 32.99,
-    calories: 130,
-    protein: 24,
-    weight: 500,
-    image: 'https://m.media-amazon.com/images/I/71xhaB1CRkL._AC_SY879_.jpg',
-  },
-];
-
 function App() {
-  const [efficiencySort, setEfficiencySort] = useState(""); // Initial state is empty
-  const [priceSort, setPriceSort] = useState(""); // Initial state is empty
+  const [sortOption, setSortOption] = useState("");
+  const [displayCount, setDisplayCount] = useState(100); // Default to showing all products
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
+  useEffect(() => {
+    // Fetch protein powder data from Flask API
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // Direct request to Flask backend
+        const response = await fetch('http://127.0.0.1:5000/api/protein-powders', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        // Log the raw response for debugging
+        const text = await response.text();
+        console.log("Raw response:", text);
+        
+        // Try to parse the JSON
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (error) {
+          throw new Error(`Invalid JSON response: ${text.substring(0, 100)}...`);
+        }
+        
+        console.log("Data received from API:", data);
+        
+        // Process the data to add the efficiency property
+        const processedData = data.map(product => ({
+          ...product,
+          efficiency: (product.properserv / (product.price / product.servings))
+        }));
+        
+        console.log("Processed data:", processedData);
+        setProducts(processedData);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching protein powder data:", err);
+        setError(`Failed to load protein powder data: ${err.message}`);
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
 
-  const sortedProducts = [...products]
-  .map((p) => ({
-    ...p,
-    efficiency: p.protein / p.calories,
-    pricePerGram: p.price / (p.weight / 1000),
-  }))
-  .sort((a, b) => {
-    // which sorting method was changed last
-    if (efficiencySort === "high-to-low" || efficiencySort === "low-to-high") {
-      return efficiencySort === "high-to-low"
-        ? b.efficiency - a.efficiency
-        : a.efficiency - b.efficiency;
+  // Calculate all the metrics we need for sorting
+  const productsWithMetrics = [...products].map(product => ({
+    ...product,
+    proteinPerServing: product.properserv,
+    proteinPer100Cal: (product.properserv / product.calories) * 100,
+    proteinPerDollar: product.properserv / (product.price / product.servings)
+  }));
+  
+  // Sort the products based on the selected option
+  const sortedProducts = [...productsWithMetrics].sort((a, b) => {
+    switch (sortOption) {
+      case "protein-per-serving":
+        return b.proteinPerServing - a.proteinPerServing;
+      case "protein-per-100-cal":
+        return b.proteinPer100Cal - a.proteinPer100Cal;
+      case "protein-per-dollar":
+        return b.proteinPerDollar - a.proteinPerDollar;
+      default:
+        return 0; // No sorting
     }
-
-    if (priceSort === "low-to-high" || priceSort === "high-to-low") {
-      return priceSort === "low-to-high"
-        ? a.pricePerGram - b.pricePerGram
-        : b.pricePerGram - a.pricePerGram;
-    }
-
-    return 0; //this means no sorting was done
   });
 
   return (
@@ -242,52 +274,61 @@ function App() {
           Compare protein products side by side to discover the best value for your fitness and budget goals.
         </p>
 
-      <div style={styles.sortContainer}>
-
-
-        <div style={styles.sortGroup}>
-        <h3 style={styles.label}>Sort by Efficiency</h3>
-        <select
-          value={efficiencySort}
-          onChange={(e) => {
-            setEfficiencySort(e.target.value);
-            setPriceSort(""); // Reset sorting when efficiency is changed
-          }}
-          style={styles.select}
-        >
-          <option value="">Select</option>
-          <option value="high-to-low">High to Low</option>
-          <option value="low-to-high">Low to High</option>
-        </select>
-      </div>
-
-      <div style={styles.sortGroup}>
-        <h3 style={styles.label}>Sort by Price</h3>
-        <select
-          value={priceSort}
-          onChange={(e) => {
-            setPriceSort(e.target.value);
-            setEfficiencySort(""); // Reset sorting when price is changed
-          }}
-          style={styles.select}
-        >
-          <option value="">Select</option>
-          <option value="low-to-high">Low to High</option>
-          <option value="high-to-low">High to Low</option>
-        </select>
-      </div>
-    </div>
-
-        {sortedProducts.map((product, index) => (
-          <div style={styles.productCard} key={index}>
-            <h3>{product.name}</h3>
-            <img src={product.image} alt={product.name} style={styles.productImage} />
-            <p>Price: ${product.price.toFixed(2)}</p>
-            <p>Price per Gram: ${product.pricePerGram.toFixed(4)}</p>
-            <p>Protein Efficiency: {product.efficiency.toFixed(4)}</p>
-            
+        <div style={styles.sortContainer}>
+          <div style={styles.sortGroup}>
+            <h3 style={styles.label}>Sort Products By</h3>
+            <select
+              id="sort-option"
+              name="sort-option"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              style={styles.select}
+            >
+              <option value="">Select an option</option>
+              <option value="protein-per-serving">Protein Per Serving (Highest First)</option>
+              <option value="protein-per-100-cal">Protein Per 100 Calories</option>
+              <option value="protein-per-dollar">Protein Per Dollar</option>
+            </select>
           </div>
-        ))}
+          
+          <div style={styles.sortGroup}>
+            <h3 style={styles.label}>Top Products to Display</h3>
+            <select
+              id="display-count"
+              name="display-count"
+              value={displayCount}
+              onChange={(e) => setDisplayCount(Number(e.target.value))}
+              style={styles.select}
+            >
+              {[3, 5, 10, 25, 50, 100].map(count => (
+                <option key={count} value={count}>Top {count}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {loading ? (
+          <p style={styles.loadingText}>Loading protein powder data...</p>
+        ) : error ? (
+          <p style={styles.errorText}>{error}</p>
+        ) : (
+          sortedProducts.slice(0, displayCount).map((product, index) => (
+            <div style={styles.productCard} key={index}>
+              <h3>{product.name}</h3>
+              <img src={product.image_url} alt={product.name} style={styles.productImage} />
+              <p>Price: ${product.price.toFixed(2)}</p>
+              <p>Calories per serving: {product.calories}</p>
+              <p>Protein per serving: {product.properserv}g</p>
+              <p>Total servings: {product.servings}</p>
+              <p>Price per serving: ${(product.price / product.servings).toFixed(2)}</p>
+              <p>Protein per 100 calories: {product.proteinPer100Cal.toFixed(2)}g</p>
+              <p>Protein per dollar: {product.proteinPerDollar.toFixed(2)}g</p>
+              <a href={product.web_url} target="_blank" rel="noopener noreferrer">
+                <button style={styles.buyButton}>Buy Now</button>
+              </a>
+            </div>
+          ))
+        )}
       </main>
 
       <section style={styles.faqSection}>
@@ -305,11 +346,11 @@ function App() {
       <section style={styles.faqSection}>
         <h2 style={styles.faqTitle}>Frequently Asked Questions</h2>
         <div style={styles.faqItem}>
-          <h3 style={styles.faqQuestion}>How is nutritional efficiency calculated?</h3>
+          <h3 style={styles.faqQuestion}>Why Is This Important?</h3>
           <p style={styles.faqAnswer}>
-            Nutritional efficiency is calculated by dividing the calories by the grams of protein in each product.
-            A lower number means you're getting more protein for fewer calories, which is generally preferred for
-            those looking to maximize protein intake while minimizing caloric impact.
+            For a serious athlete, protein is a crucial nutrient that helps build and repair muscle tissue, 
+            which is essential for muscle growth and recovery. However, there is no website that 
+            allows you to sort protein powders by stats that matter such as protein per 100 calories and price per serving so thats where we come in to offer the best product imagineable.
           </p>
         </div>
       </section>
